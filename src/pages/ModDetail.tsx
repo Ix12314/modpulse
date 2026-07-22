@@ -15,6 +15,7 @@ import {
 import Navbar from "@/components/Navbar";
 import ErrorState from "@/components/ErrorState";
 import { Skeleton } from "@/components/Skeleton";
+import TranslatableText from "@/components/TranslatableText";
 import { getProject, getVersions, type Project, type Version } from "@/lib/api";
 import { formatCompact, formatFull, formatDate, formatSize, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -145,9 +146,10 @@ export default function ModDetail() {
               </div>
             </div>
 
-            <p className="mt-4 max-w-3xl text-pretty text-sm leading-relaxed text-muted-light dark:text-muted-dark">
-              {project.description}
-            </p>
+            <TranslatableText
+              text={project.description}
+              className="mt-4 max-w-3xl"
+            />
 
             {/* Stat grid */}
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">

@@ -3,6 +3,7 @@ import { Download, Heart, Package2 } from "lucide-react";
 import type { ModHit } from "@/lib/api";
 import { formatCompact, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import TranslatableText from "./TranslatableText";
 
 // Visual category badges mapping for loader / type chips.
 const LOADER_BADGE: Record<string, string> = {
@@ -78,9 +79,7 @@ export default function ModCard({ mod, index }: { mod: ModHit; index?: number })
         </div>
       </div>
 
-      <p className="clamp-2 mt-3 text-xs leading-relaxed text-muted-light dark:text-muted-dark">
-        {mod.description || "暂无描述"}
-      </p>
+      <TranslatableText text={mod.description} compact className="mt-3" />
 
       <div className="mt-3 flex flex-wrap items-center gap-1">
         {loaders.slice(0, 3).map((l) => (
