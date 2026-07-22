@@ -6,6 +6,7 @@ import FilterBar from "@/components/FilterBar";
 import ModCard from "@/components/ModCard";
 import Empty from "@/components/Empty";
 import ErrorState from "@/components/ErrorState";
+import MinecraftUpdates from "@/components/MinecraftUpdates";
 import ResourceSection from "@/components/ResourceSection";
 import { CardGridSkeleton } from "@/components/Skeleton";
 import { searchMods, type ModHit } from "@/lib/api";
@@ -139,6 +140,7 @@ export default function Home() {
         {/* Curated resource sections — only on the default (unfiltered) view. */}
         {!query && !projectType && loaders.length === 0 && (
           <div className="mt-4">
+            <MinecraftUpdates />
             <ResourceSection
               projectType="shader"
               title="热门光影包"
