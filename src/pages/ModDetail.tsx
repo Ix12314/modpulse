@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import DependencyList from "@/components/DependencyList";
 import ErrorState from "@/components/ErrorState";
 import { Skeleton } from "@/components/Skeleton";
 import TranslatableText from "@/components/TranslatableText";
@@ -320,6 +321,9 @@ export default function ModDetail() {
             </div>
           )}
         </section>
+
+        {/* Dependency manifest — hidden automatically when no deps exist. */}
+        <DependencyList versions={versions} />
 
         <footer className="mt-12 border-t border-line-light/60 pt-6 text-center text-xs text-faint-light dark:border-line-dark/60 dark:text-faint-dark">
           <p>

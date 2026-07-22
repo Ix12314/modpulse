@@ -78,6 +78,15 @@ export interface VersionFile {
   file_type: string | null;
 }
 
+export type DependencyType = "required" | "optional" | "incompatible" | "embedded";
+
+export interface Dependency {
+  version_id: string | null;
+  project_id: string | null;
+  file_name: string | null;
+  dependency_type: DependencyType;
+}
+
 export interface Version {
   id: string;
   project_id: string;
@@ -91,6 +100,7 @@ export interface Version {
   files: VersionFile[];
   date_published: string;
   downloads: number;
+  dependencies: Dependency[];
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -129,6 +139,42 @@ export function getVersions(idOrSlug: string): Promise<Version[]> {
   return request<Version[]>(
     `/project/${encodeURIComponent(idOrSlug)}/version?game_versions=""`
   ).catch(() => request<Version[]>(`/project/${encodeURIComponent(idOrSlug)}/version`));
+}
+
+/**
+ * Batch-fetch multiple projects by ID. Modrinth's /projects endpoint accepts a
+ * JSON array of IDs via the `ids` query param. Returns empty array if none.
+ */
+export function getProjects(ids: string[]): Promise<Project[]> {
+  if (ids.length === 0) return Promise.resolve([]);
+  return request<Project[]>(
+    `/projects?ids=${encodeURIComponent(JSON.stringify(ids))}`,
+  );
+}
+
+/**
+ * Collect unique dependency project IDs from a list of versions, grouped by
+ * dependency type. Returns a record keyed by DependencyType.
+ */
+export function collectDependencies(
+  versions: Version[],
+): Record<DependencyType, string[]> {
+  const result: Record<DependencyType, string[]> = {
+    required: [],
+    optional: [],
+    incompatible: [],
+    embedded: [],
+  };
+  const seen = new Set<string>();
+  for (const v of versions) {
+    for (const dep of v.dependencies ?? []) {
+      if (dep.project_id && !seen.has(dep.project_id)) {
+        seen.add(dep.project_id);
+        result[dep.dependency_type]?.push(dep.project_id);
+      }
+    }
+  }
+  return result;
 }
 
 // Known loaders + categories used for the filter UI
